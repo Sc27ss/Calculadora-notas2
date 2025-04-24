@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculadora de Notas Escolares</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="container">
+        <div class="header-content">
+          <div>
+            <h1 class="app-title">
+              <i class="fas fa-graduation-cap app-icon"></i>
+              Calculadora de Notas Escolares
+            </h1>
+            <p class="app-description">
+              Calcula, guarda y visualiza tus calificaciones por materias
+            </p>
+          </div>
+          <div class="header-actions">
+            <button id="reset-data-btn" class="btn-danger">
+              <i class="fas fa-trash-alt"></i>
+              Reiniciar datos
+            </button>
+            <div class="window-controls">
+              <div class="window-control red"></div>
+              <div class="window-control yellow"></div>
+              <div class="window-control green"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="container">
+      <div class="grid">
+        <div class="column-left animate-slideIn">
+          <div class="card" id="subject-selector">
+            <h2 class="section-title">
+              <i class="fas fa-book section-icon"></i>
+              Selecciona una materia
+            </h2>
+            <div class="subject-grid" id="subjects-container">
+              <!-- Las materias se generarán dinámicamente desde JavaScript -->
+            </div>
+            
+            <div class="view-more-container">
+              <button id="view-more-subjects" class="view-more-btn">
+                <i class="fas fa-chevron-down"></i> 
+                Ver todas las materias (<span id="total-subjects-count">0</span>)
+              </button>
+            </div>
+            <div id="selected-subject-display" class="selected-subject hidden">
+              <!-- La materia seleccionada se mostrará aquí -->
+            </div>
+          </div>
+          
+          <div class="card" id="grade-calculator">
+            <h2 class="section-title">
+              <i class="fas fa-calculator section-icon"></i>
+              Calcula el promedio <span id="subject-name-display">de la materia</span>
+            </h2>
+            <!-- Componentes principales -->
+            <div class="main-components">
+              <!-- Componente Cognitivo -->
+              <div class="component-card">
+                <div class="component-header">
+                  <div class="component-icon-container" style="background-color: rgba(129, 140, 248, 0.2)">
+                    <i class="fas fa-brain component-icon" style="color: #818cf8"></i>
+                  </div>
+                  <div>
+                    <h3 class="component-title">Componente Cognitivo</h3>
+                    <div class="component-description">
+                      <span class="description-text">Evaluación de conocimientos teóricos</span>
+                      <span class="weight-badge" style="background-color: rgba(129, 140, 248, 0.2); color: #818cf8">
+                        30%
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="grades-list" id="cognitive-grades-container">
+                  <!-- Los campos de notas se generarán dinámicamente -->
+                  <div class="grade-input-container">
+                    <div class="grade-input-header">
+                      <label class="grade-label">Nota 1</label>
+                      <button class="remove-grade-btn" disabled>
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                    <input type="number" min="0" max="5" step="0.1" class="grade-input cognitive-grade" placeholder="0.0">
+                    <div class="stars-container hidden">
+                      <!-- Las estrellas se generarán dinámicamente -->
+                    </div>
+                  </div>
+                </div>
+                
+                <button class="add-grade-btn" data-component="cognitive">
+                  <i class="fas fa-plus"></i>
+                  Agregar nota
+                </button>
+                
+                <div class="component-results">
+                  <div class="results-stats">
+                    <div>
+                      <div class="stats-label">Promedio</div>
+                      <div class="stats-value" id="cognitive-avg">0.0</div>
+                    </div>
+                    <div>
+                      <div class="stats-label">Ponderado</div>
+                      <div class="stats-value" id="cognitive-weighted" style="color: #818cf8">0.0</div>
+                    </div>
+                  </div>
+                  
+                  <div class="progress-container">
+                    <div class="progress-bar" id="cognitive-progress" style="width: 0%; background-color: #818cf8"></div>
+                  </div>
+                </div>
+              </div>
+              <!-- Componente Procedimental -->
+              <div class="component-card">
+                <div class="component-header">
+                  <div class="component-icon-container" style="background-color: rgba(96, 165, 250, 0.2)">
+                    <i class="fas fa-cogs component-icon" style="color: #60a5fa"></i>
+                  </div>
+                  <div>
+                    <h3 class="component-title">Componente Procedimental</h3>
+                    <div class="component-description">
+                      <span class="description-text">Aplicación práctica de conocimientos</span>
+                      <span class="weight-badge" style="background-color: rgba(96, 165, 250, 0.2); color: #60a5fa">
+                        30%
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="grades-list" id="procedural-grades-container">
+                  <!-- Los campos de notas se generarán dinámicamente -->
+                  <div class="grade-input-container">
+                    <div class="grade-input-header">
+                      <label class="grade-label">Nota 1</label>
+                      <button class="remove-grade-btn" disabled>
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                    <input type="number" min="0" max="5" step="0.1" class="grade-input procedural-grade" placeholder="0.0">
+                    <div class="stars-container hidden">
+                      <!-- Las estrellas se generarán dinámicamente -->
+                    </div>
+                  </div>
+                </div>
+                
+                <button class="add-grade-btn" data-component="procedural">
+                  <i class="fas fa-plus"></i>
+                  Agregar nota
+                </button>
+                
+                <div class="component-results">
+                  <div class="results-stats">
+                    <div>
+                      <div class="stats-label">Promedio</div>
+                      <div class="stats-value" id="procedural-avg">0.0</div>
+                    </div>
+                    <div>
+                      <div class="stats-label">Ponderado</div>
+                      <div class="stats-value" id="procedural-weighted" style="color: #60a5fa">0.0</div>
+                    </div>
+                  </div>
+                  
+                  <div class="progress-container">
+                    <div class="progress-bar" id="procedural-progress" style="width: 0%; background-color: #60a5fa"></div>
+                  </div>
+                </div>
+              </div>
+              <!-- Componente Actitudinal -->
+              <div class="component-card">
+                <div class="component-header">
+                  <div class="component-icon-container" style="background-color: rgba(250, 204, 21, 0.2)">
+                    <i class="fas fa-hands-helping component-icon" style="color: #facc15"></i>
+                  </div>
+                  <div>
+                    <h3 class="component-title">Componente Actitudinal</h3>
+                    <div class="component-description">
+                      <span class="description-text">Comportamiento y participación</span>
+                      <span class="weight-badge" style="background-color: rgba(250, 204, 21, 0.2); color: #facc15">
+                        15%
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="grades-list" id="attitudinal-grades-container">
+                  <!-- Los campos de notas se generarán dinámicamente -->
+                  <div class="grade-input-container">
+                    <div class="grade-input-header">
+                      <label class="grade-label">Nota 1</label>
+                      <button class="remove-grade-btn" disabled>
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                    <input type="number" min="0" max="5" step="0.1" class="grade-input attitudinal-grade" placeholder="0.0">
+                    <div class="stars-container hidden">
+                      <!-- Las estrellas se generarán dinámicamente -->
+                    </div>
+                  </div>
+                </div>
+                
+                <button class="add-grade-btn" data-component="attitudinal">
+                  <i class="fas fa-plus"></i>
+                  Agregar nota
+                </button>
+                
+                <div class="component-results">
+                  <div class="results-stats">
+                    <div>
+                      <div class="stats-label">Promedio</div>
+                      <div class="stats-value" id="attitudinal-avg">0.0</div>
+                    </div>
+                    <div>
+                      <div class="stats-label">Ponderado</div>
+                      <div class="stats-value" id="attitudinal-weighted" style="color: #facc15">0.0</div>
+                    </div>
+                  </div>
+                  
+                  <div class="progress-container">
+                    <div class="progress-bar" id="attitudinal-progress" style="width: 0%; background-color: #facc15"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Evaluaciones opcionales -->
+            <div class="optional-evaluations">
+              <!-- Autoevaluación -->
+              <div class="optional-card">
+                <div class="optional-header">
+                  <div class="optional-icon-container" style="background-color: rgba(74, 222, 128, 0.2)">
+                    <i class="fas fa-user-check optional-icon" style="color: #4ade80"></i>
+                  </div>
+                  <div>
+                    <h3 class="optional-title">Autoevaluación</h3>
+                    <div class="optional-description">
+                      <span class="description-text">Reflexión sobre el propio desempeño</span>
+                      <span class="weight-badge" style="background-color: rgba(74, 222, 128, 0.2); color: #4ade80">
+                        5%
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="optional-input-container">
+                  <input 
+                    type="number" 
+                    min="0" 
+                    max="5" 
+                    step="0.1" 
+                    id="self-evaluation-input"
+                    class="grade-input" 
+                    placeholder="0.0"
+                  >
+                  <div id="self-evaluation-stars" class="stars-container hidden">
+                    <!-- Las estrellas se generarán dinámicamente -->
+                  </div>
+                </div>
+                
+                <div class="weighted-result">
+                  <span class="weighted-label">Valor ponderado</span>
+                  <span class="weighted-value" id="self-evaluation-weighted" style="color: #4ade80">0.00</span>
+                </div>
+              </div>
+              <!-- Prueba de Periodo -->
+              <div class="optional-card">
+                <div class="optional-header">
+                  <div class="optional-icon-container" style="background-color: rgba(192, 132, 252, 0.2)">
+                    <i class="fas fa-file-alt optional-icon" style="color: #c084fc"></i>
+                  </div>
+                  <div>
+                    <h3 class="optional-title">Prueba de Periodo</h3>
+                    <div class="optional-description">
+                      <span class="description-text">Evaluación final del periodo</span>
+                      <span class="weight-badge" style="background-color: rgba(192, 132, 252, 0.2); color: #c084fc">
+                        20%
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="optional-input-container">
+                  <input 
+                    type="number" 
+                    min="0" 
+                    max="5" 
+                    step="0.1" 
+                    id="period-test-input"
+                    class="grade-input" 
+                    placeholder="0.0"
+                  >
+                  <div id="period-test-stars" class="stars-container hidden">
+                    <!-- Las estrellas se generarán dinámicamente -->
+                  </div>
+                </div>
+                
+                <div class="weighted-result">
+                  <span class="weighted-label">Valor ponderado</span>
+                  <span class="weighted-value" id="period-test-weighted" style="color: #c084fc">0.0</span>
+                </div>
+              </div>
+            </div>
+            <!-- Resultado final -->
+            <div class="final-result">
+              <div class="final-header">
+                <div>
+                  <h3 class="final-title">Nota Final</h3>
+                  <p class="final-description">Promedio ponderado de todos los componentes</p>
+                </div>
+                <div class="final-grade-display">
+                  <div class="final-grade" id="final-grade-value">0.0</div>
+                  <div class="final-stars" id="final-stars">
+                    <!-- Las estrellas se generarán dinámicamente -->
+                  </div>
+                </div>
+              </div>
+              
+              <div class="final-progress-container">
+                <div class="final-progress-bar" id="final-progress-bar" style="width: 0%"></div>
+              </div>
+              
+              <div class="final-message" id="final-message">
+                <!-- El mensaje se generará dinámicamente basado en la nota final -->
+              </div>
+            </div>
+            <div class="save-button-container">
+              <button id="save-grade-btn" class="save-button" disabled>
+                <i class="fas fa-save"></i>
+                Guardar Resultado
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="column-right animate-slideIn">
+          <div class="card" id="statistics">
+            <h2 class="section-title">
+              <i class="fas fa-chart-line section-icon"></i>
+              Estadísticas
+            </h2>
+            
+            <div class="stats-grid">
+              <div class="stat-box">
+                <div class="stat-label">Promedio General</div>
+                <div class="stat-value" id="overall-average">0.0</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">Materias Registradas</div>
+                <div class="stat-value" id="grades-count">0</div>
+              </div>
+            </div>
+            
+            <div id="subject-details-container" class="details-container hidden">
+              <h3 class="details-title">Detalles por materia</h3>
+              <div id="subject-details" class="subject-details">
+                <!-- Los detalles se generarán dinámicamente -->
+              </div>
+            </div>
+          </div>
+          
+          <div class="card" id="grade-history">
+            <h2 class="section-title">
+              <i class="fas fa-history section-icon"></i>
+              Historial de Notas
+            </h2>
+            
+            <div id="empty-history" class="empty-history">
+              <i class="fas fa-chart-line empty-icon"></i>
+              <p class="empty-message">Aún no has guardado ninguna nota</p>
+              <p class="empty-submessage">Calcula y guarda tu primera nota para comenzar</p>
+            </div>
+            
+            <div id="history-content" class="history-content hidden">
+              <!-- El historial se generará dinámicamente -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="container">
+        <p class="footer-text">
+          <i class="fas fa-code footer-icon"></i>
+          Calculadora de Notas Escolares - Desarrollada con HTML, CSS y JavaScript
+        </p>
+        <p class="footer-copyright">
+          © <span id="current-year"></span> - Todos los derechos reservados
+        </p>
+      </div>
+    </footer>
+    <div id="confetti-container" class="confetti-container"></div>
+    <div id="motivational-alert" class="toast">
+      <div class="toast-header">
+        <i class="fas fa-star toast-icon"></i>
+        <h3 class="toast-title">¡Felicitaciones!</h3>
+      </div>
+      <p class="toast-message" id="motivational-message"></p>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
